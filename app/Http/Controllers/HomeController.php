@@ -19,11 +19,15 @@ class HomeController extends Controller
     public function __invoke()
     {
         return view('home', [
-            'services' => Service::active()->orderBy('sort')->limit(6)->get(),
+            'services' => Service::active()->orderBy('sort')->limit(12)->get(),
             'skills' => Skill::active()->orderBy('sort')->get()->groupBy('category_bn'),
             'responsibilities' => Responsibility::active()->orderBy('sort')->get(),
             'featuredProjects' => Project::with('category')->where('featured', true)->active()->limit(3)->get(),
-            'portfolios' => Project::with('category')->active()->orderBy('sort')->limit(6)->get(),
+            'portfolios' => Project::with('category')->active()->orderBy('sort')->limit(9)->get(),
+            'packages' => \App\Models\PricingPackage::active()->orderBy('sort')->get(),
+            'calcItems' => \App\Models\CalculatorItem::active()->orderBy('sort')->get(),
+            'caseStudies' => Project::with('category')->active()
+                ->whereNotNull('metrics')->orderBy('sort')->limit(3)->get(),
             'categories' => PortfolioCategory::active()->orderBy('sort')->get(),
             'team' => TeamMember::active()->orderBy('sort')->limit(4)->get(),
             'certificates' => Certificate::active()->orderBy('sort')->get(),

@@ -15,6 +15,8 @@ foreach ([
     'stats' => Admin\StatController::class,
     'posts' => Admin\PostController::class,
     'pages' => Admin\PageController::class,
+    'pricing-packages' => Admin\PricingPackageController::class,
+    'calculator-items' => Admin\CalculatorItemController::class,
 ] as $uri => $controller) {
     Route::resource($uri, $controller)->except(['show']);
 }

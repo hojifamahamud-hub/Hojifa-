@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     if (galleryToggle && navLinks) {
-        galleryToggle.addEventListener('click', () => navLinks.classList.toggle('hidden'));
+        galleryToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
     }
 
     const faq = document.querySelectorAll('details.faq-item');
@@ -30,3 +30,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    const syncIcon = () => {
+        const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const moon = themeToggle.querySelector('.theme-icon-moon');
+        const sun = themeToggle.querySelector('.theme-icon-sun');
+        if (moon && sun) {
+            moon.style.display = dark ? 'none' : '';
+            sun.style.display = dark ? '' : 'none';
+        }
+    };
+    syncIcon();
+    themeToggle.addEventListener('click', () => {
+        const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (dark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        }
+        syncIcon();
+    });
+}
+
+window.addEventListener('load', () => { if (window.lucide) lucide.createIcons(); });

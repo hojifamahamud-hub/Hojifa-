@@ -40,6 +40,8 @@
                 [route('admin.stats.index'), '📊 Stats'],
                 [route('admin.posts.index'), '✍️ '.__('site.admin.blog')],
                 [route('admin.pages.index'), '📄 Pages'],
+                [route('admin.pricing-packages.index'), '💰 প্রাইসিং প্যাকেজ'],
+                [route('admin.calculator-items.index'), '🧮 ক্যালকুলেটর সার্ভিস'],
             ];
     @endphp
         @foreach($menu as $item)

@@ -13,5 +13,9 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('chat', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
         RateLimiter::for('leads', fn (Request $request) => Limit::perMinute(6)->by($request->ip()));
+
+        view()->composer('partials.footer', function ($view) {
+            $view->with('footerServices', \App\Models\Service::active()->orderBy('sort')->limit(4)->get());
+        });
     }
 }

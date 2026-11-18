@@ -34,6 +34,8 @@ Route::middleware('locale')->group(function () {
     Route::get('/portfolio/show/{project:slug}', [PortfolioController::class, 'show'])->name('portfolio.show');
     Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
     Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+    Route::post('/meeting-request', [\App\Http\Controllers\MeetingController::class, 'store'])->middleware('throttle:leads')->name('meeting.store');
+    Route::post('/newsletter', \App\Http\Controllers\NewsletterController::class)->middleware('throttle:leads')->name('newsletter.store');
     Route::post('/visitors', VisitorLeadController::class)->middleware('throttle:leads')->name('visitors.store');
     Route::post('/chat', [ChatController::class, 'store'])->middleware('throttle:chat')->name('chat.store');
     Route::get('/lang/{locale}', LocaleController::class)->name('locale.switch');
