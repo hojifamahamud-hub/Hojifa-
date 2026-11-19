@@ -1,0 +1,51 @@
+পড়ুন প্রথমে — Hojifa সাইটের কাস্টম ফাইল (আপডেট প্যাক)
+
+ভেতরে যা আছে:
+  app/, bootstrap/, config/, database/, lang/, public/, resources/, routes/,
+  composer.json, composer.lock, .env — সবই প্রস্তুত সাইটের।
+
+এই ভার্সনে নতুন যা আছে:
+  - ক্যানভা-স্টাইল সম্পূর্ণ হোমপেজ (Hero, Achievements, About, Skills,
+    Services, Pricing, কাস্টম প্রাইসিং ক্যালকুলেটর, Portfolio, Case Studies,
+    Testimonials, Video, Insights, বাংলা FAQ, মিটিং বুকিং, নিউজলেটার, Contact)
+  - ডার্ক মোড টগল (ভিজিটরের পছন্দ localStorage-এ জমা থাকে)
+  - প্রাইসিং প্যাকেজ ও ক্যালকুলেটর সার্ভিস — অ্যাডমিন থেকে CRUD
+  - মিটিং বুকিং ও নিউজলেটার লিড — Leads-এ জমা হবে
+  - হোমপেজের প্রতিটি সেকশনের টেক্সট/টগল — অ্যাডমিন Settings-এ বদলানো যায়
+
+কীভাবে লাগাবেন:
+  ১) File Manager-এ আপনার আগের Laravel ফোল্ডারটায় যান
+     (যেখানে artisan, composer.json, vendor আছে)।
+  ২) এই জিপটা সেখানে আপলোড করুন -> Extract -> Overwrite করুন।
+  ৩) ডেটাবেস আপডেট (যেকোনো একটি):
+       (ক) phpMyAdmin -> আপনার ডিবি সিলেক্ট করুন -> Import -> install.sql
+           (আবার ইমপোর্ট নিরাপদ - আগের ডেটা ওভাররাইট হবে না)
+       (খ) বা SSH/Terminal থাকলে: php artisan migrate
+  ৪) .env খুলে শুধু এই লাইনে নিজের ডিবি পাসওয়ার্ড দিন:
+       DB_PASSWORD=আপনার_ডিবি_পাসওয়ার্ড
+     (DB_DATABASE ও DB_USERNAME আগেই ঠিক আছে: mahmudsu_hojifa)
+  ৫) storage ও bootstrap/cache ফোল্ডারে 755 পারমিশন দিন।
+  ৬) ক্যাশ পরিষ্কার করুন (SSH থাকলে):
+       php artisan config:clear && php artisan cache:clear
+     (না হলে cPanel থেকে অ্যাপ একবার রিস্টার্ট করলেই হবে)
+  ৭) ডোমেইন ওয়েব রুট ঠিক করুন:
+       সেরা পথ: cPanel -> Domains -> home.mahmudsupport.xyz -> Document Root
+                 বদলে দিন: <laravel-ফোল্ডার>/public
+       না হলে: এই জিপের public/ ভেতরের সব ফাইল কপি করে
+               আপনার ডোমেইন রুট ফোল্ডারে পেস্ট করুন।
+  ৮) সাইট: https://home.mahmudsupport.xyz/  |  অ্যাডমিন: /admin/login
+       admin@mahmudsupport.xyz / Admin@12345  (প্রথম কাজ: পাসওয়ার্ড বদলান)
+
+অ্যাডমিনে নতুন মেনু:
+  প্রাইসিং প্যাকেজ — প্যাকেজ যোগ/এডিট, ফিচার লিস্ট, ব্যাজ
+  ক্যালকুলেটর সার্ভিস — ক্যালকুলেটরের সার্ভিস ও দাম
+  Settings -> Home / Pricing ট্যাব — সেকশনের শিরোনাম, লেখা, টগল, ব্যানার
+
+কাস্টমাইজেশন চিটশিট (Settings):
+  Brand   : সাইটের নাম, ট্যাগলাইন, লোগো
+  Hero    : হিরো ব্যাজ/টাইটেল/সাবটাইটেল, বাটন
+  Home    : হিরো ছোট লেখা ও ভূমিকা, ট্যাগ, ছবি, প্ল্যাটফর্ম, সব সেকশনের
+            শিরোনাম-সাবটেক্সট, About প্যারাগ্রাফ, CTA ব্যানার, ভিডিও,
+            সেকশন দেখানো/লুকানোর টগল
+  Pricing : মুদ্রা, বান্ডেল ডিসকাউন্ট %, মিটিং অপশন (টাইটেল | বিবরণ | দাম)
+  Contact : ইমেইল, ফোন, ঠিকানা, সোশ্যাল লিংক

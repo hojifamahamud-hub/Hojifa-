@@ -300,6 +300,8 @@ CREATE TABLE IF NOT EXISTS `leads` (
   `phone` VARCHAR(255) NULL,
   `budget` VARCHAR(255) NULL,
   `timeline` VARCHAR(255) NULL,
+  `meeting_type` VARCHAR(255) NULL,
+  `preferred_date` DATE NULL,
   `message` TEXT NULL,
   `status` VARCHAR(255) NOT NULL DEFAULT 'new',
   `admin_notes` TEXT NULL,
@@ -503,3 +505,86 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (1, '0001_01_01_000
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (2, '0001_01_01_000001_create_cache_table', 1);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (3, '0001_01_01_000002_create_jobs_table', 1);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (4, '0001_01_02_000000_create_site_tables', 1);
+
+-- ============================================================
+-- Homepage v2 update: pricing packages, custom pricing calculator,
+-- meeting booking columns, new settings
+-- নিরাপদে আবার ইমপোর্ট করা যায় — আগের ডেটা ওভাররাইট হয় না
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `pricing_packages` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name_bn` VARCHAR(255) NOT NULL,
+  `name_en` VARCHAR(255) NULL,
+  `price` VARCHAR(30) NOT NULL,
+  `unit_bn` VARCHAR(255) NULL,
+  `unit_en` VARCHAR(255) NULL,
+  `description_bn` TEXT NULL,
+  `description_en` TEXT NULL,
+  `features` JSON NULL,
+  `badge_bn` VARCHAR(255) NULL,
+  `badge_en` VARCHAR(255) NULL,
+  `featured` TINYINT(1) NOT NULL DEFAULT 0,
+  `sort` INT UNSIGNED NOT NULL DEFAULT 0,
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO `pricing_packages` (`id`, `name_bn`, `name_en`, `price`, `unit_bn`, `unit_en`, `description_bn`, `description_en`, `features`, `badge_bn`, `badge_en`, `featured`, `sort`, `active`, `created_at`, `updated_at`) VALUES
+(1, 'স্টার্টার', 'Starter', '$49', '/ প্রজেক্ট', '/ project', 'শুরু করা ছোট ব্যবসার জন্য পারফেক্ট', 'Perfect for small businesses getting started', '["Social Media Setup (2 Platforms)","Basic SEO Audit","5 Social Media Posts","Basic Analytics Report","1 Revision Round"]', NULL, NULL, 0, 1, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(2, 'প্রফেশনাল', 'Professional', '$99', '/ মাস', '/ month', 'গ্রোয়িং ব্যবসার জন্য সেরা', 'Best for growing businesses', '["Full Social Media Management","Complete SEO Optimization","15 Social Media Posts/Month","Google Ads Management","Monthly Analytics Report","Pinterest Marketing","1 Revision Round"]', 'সবচেয়ে জনপ্রিয়', 'MOST POPULAR', 1, 2, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(3, 'এন্টারপ্রাইজ', 'Enterprise', '$149', '/ মাস', '/ month', 'সম্পূর্ণ ডিজিটাল মার্কেটিং সমাধান', 'Complete digital marketing solution', '["Everything in Professional","Website Design & Development","30 Social Media Posts/Month","Video Content Creation","Email Marketing Automation","B2B Lead Generation","Dedicated Account Manager","Unlimited Revisions"]', NULL, NULL, 0, 3, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22');
+
+CREATE TABLE IF NOT EXISTS `calculator_items` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name_bn` VARCHAR(255) NOT NULL,
+  `name_en` VARCHAR(255) NULL,
+  `category_bn` VARCHAR(255) NULL,
+  `category_en` VARCHAR(255) NULL,
+  `price` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `sort` INT UNSIGNED NOT NULL DEFAULT 0,
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO `calculator_items` (`id`, `name_bn`, `name_en`, `category_bn`, `category_en`, `price`, `sort`, `active`, `created_at`, `updated_at`) VALUES
+(1, 'SEO Audit & Report', 'SEO Audit & Report', 'SEO', 'SEO', 15, 1, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(2, 'Full SEO Optimization', 'Full SEO Optimization', 'SEO', 'SEO', 79, 2, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(3, 'Keyword Research', 'Keyword Research', 'SEO', 'SEO', 25, 3, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(4, 'Social Media Setup', 'Social Media Setup', 'Social Media', 'Social Media', 19, 4, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(5, 'Social Media Management', 'Social Media Management', 'Social Media', 'Social Media', 59, 5, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(6, 'Social Media Ads', 'Social Media Ads', 'Social Media', 'Social Media', 49, 6, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(7, 'Pinterest Marketing', 'Pinterest Marketing', 'Social Media', 'Social Media', 35, 7, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(8, 'Google Ads Management', 'Google Ads Management', 'Advertising', 'Advertising', 69, 8, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(9, 'Landing Page Design', 'Landing Page Design', 'Web Design', 'Web Design', 59, 9, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(10, 'Full Website Design', 'Full Website Design', 'Web Design', 'Web Design', 149, 10, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(11, 'Logo & Brand Identity', 'Logo & Brand Identity', 'Design', 'Design', 35, 11, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(12, 'Video Content (5 videos)', 'Video Content (5 videos)', 'Content', 'Content', 59, 12, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(13, 'Email Marketing Setup', 'Email Marketing Setup', 'Marketing', 'Marketing', 49, 13, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+(14, 'B2B Lead Generation', 'B2B Lead Generation', 'Marketing', 'Marketing', 69, 14, 1, '2026-11-18 06:39:22', '2026-11-18 06:39:22');
+
+-- পুরোনো leads টেবিলে নতুন কলাম (ফ্রেশ ইনস্টলে CREATE TABLE-এই আছে)
+SET @col = (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'leads' AND COLUMN_NAME = 'meeting_type');
+SET @ddl = IF(@col > 0, 'SELECT 1', 'ALTER TABLE `leads` ADD COLUMN `meeting_type` VARCHAR(255) NULL AFTER `timeline`');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @col = (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'leads' AND COLUMN_NAME = 'preferred_date');
+SET @ddl = IF(@col > 0, 'SELECT 1', 'ALTER TABLE `leads` ADD COLUMN `preferred_date` DATE NULL AFTER `meeting_type`');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- নতুন সেটিংস: মুদ্রা, বান্ডেল ডিসকাউন্ট, মিটিং অপশন, প্ল্যাটফর্ম স্ট্রিপ
+INSERT IGNORE INTO `settings` (`key`, `value`, `group`, `created_at`, `updated_at`) VALUES
+('currency', '$', 'pricing', '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+('calc_discount_percent', '10', 'pricing', '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+('calc_discount_min_items', '3', 'pricing', '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+('meeting_options', 'Free Consultation | 15 min · Quick chat about your project needs | Free\nStrategy Session | 30 min · In-depth marketing strategy discussion | $25\nProject Kickoff | 60 min · Full planning session for your project | $49', 'pricing', '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+('platforms', 'Freelancer\nPeoplePerHour\nGuru\nToptal\n99designs\nDesignCrowd\nFiverr', 'pricing', '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+('hero_name_bn', 'Avishek Sarkar', 'brand', '2026-11-18 06:39:22', '2026-11-18 06:39:22'),
+('hero_name_en', 'Avishek Sarkar', 'brand', '2026-11-18 06:39:22', '2026-11-18 06:39:22');
+
+-- Laravel migration রেকর্ড (php artisan migrate আর এটা চালাবে না)
+INSERT INTO `migrations` (`migration`, `batch`)
+SELECT '0001_01_03_000000_create_homepage_tables', 2
+WHERE NOT EXISTS (SELECT 1 FROM `migrations` WHERE `migration` = '0001_01_03_000000_create_homepage_tables');
