@@ -104,22 +104,22 @@ function as_home_render_settings_page()
                 continue;
             }
             if ($type === 'checkbox') {
-                $cleanlist($key) = !empty($input[$key]) ? '1' : '';
+                $clean[$key] = (isset($input[$key]) && $input[$key]) ? '1' : '';
                 continue;
             }
             if ($type === 'lines' || $type === 'textarea') {
-                $cleanlist($key) = sanitize_textarea_field($input[$key] ?? '');
+                $clean[$key] = sanitize_textarea_field(isset($input[$key]) ? $input[$key] : '');
                 continue;
             }
             if ($type === 'url') {
-                $cleanlist($key) = esc_url_raw($input[$key] ?? '');
+                $clean[$key] = esc_url_raw(isset($input[$key]) ? $input[$key] : '');
                 continue;
             }
             if ($type === 'number') {
-                $cleanlist($key) = (string) (int) ($input[$key] ?? 0);
+                $clean[$key] = (string) (int) (isset($input[$key]) ? $input[$key] : 0);
                 continue;
             }
-            $cleanlist($key) = sanitize_text_field($input[$key] ?? '');
+            $clean[$key] = sanitize_text_field(isset($input[$key]) ? $input[$key] : '');
         }
         update_option('as_home_settings', $clean, false);
         $saved = true;
@@ -152,9 +152,9 @@ function as_home_render_settings_page()
                 if ($spec['type'] === 'text' || $spec['type'] === 'url' || $spec['type'] === 'number') {
                     echo '<input type="text" class="regular-text" id="as_' . esc_attr((string) $key) . '" name="as_home[' . esc_attr((string) $key) . ']" value="' . esc_attr($val) . '">';
                 } elseif ($spec['type'] === 'checkbox') {
-                    echo '<label><input type="checkbox" value="1" ' . checked($val, '1', false) . ' name="as_home[' . esc_attr((string) $key) . ']"> ' . esc_html($spec['hint'] ?? 'হ্যাঁ') . '</label>';
+                    echo '<label><input type="checkbox" value="1" ' . checked($val, '1', false) . ' name="as_home[' . esc_attr((string) $key) . ']"> ' . esc_html(isset($spec['hint']) ? $spec['hint'] : 'হ্যাঁ') . '</label>';
                 } else {
-                    echo '<textarea class="large-text" rows="' . esc_attr($spec['rows'] ?? 3) . '" id="as_' . esc_attr((string) $key) . '" name="as_home[' . esc_attr((string) $key) . ']">' . esc_textarea($val) . '</textarea>';
+                    echo '<textarea class="large-text" rows="' . esc_attr(isset($spec['rows']) ? $spec['rows'] : 3) . '" id="as_' . esc_attr((string) $key) . '" name="as_home[' . esc_attr((string) $key) . ']">' . esc_textarea($val) . '</textarea>';
                 }
                 if ($spec['type'] !== 'checkbox' && !empty($spec['hint'])) {
                     echo '<p class="description">' . wp_kses_post($spec['hint']) . '</p>';

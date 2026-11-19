@@ -381,7 +381,7 @@ $initial = mb_substr($heroName, 0, 1);
                         <?php if ($videoEmbed !== '' && stripos($videoEmbed, 'youtu') !== false) : ?>
                             <?php
                             preg_match('/.*(?:v=|youtu\.be\/|shorts\/|embed\/)([A-Za-z0-9_-]{6,}).*/', $videoEmbed, $matches);
-                            $videoId = $matches[1] ?? '';
+                            $videoId = isset($matches[1]) ? $matches[1] : '';
                             ?>
                             <?php if ($videoId !== '') : ?>
                                 <iframe src="https://www.youtube.com/embed/<?php echo esc_attr($videoId); ?>" title="Introduction" allowfullscreen></iframe>

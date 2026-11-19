@@ -133,7 +133,7 @@ function as_home_default_settings()
         if ($spec['key'] === null) {
             continue;
         }
-        $defaults[$spec['key']] = $spec['default'] ?? '';
+        $defaults[$spec['key']] = isset($spec['default']) ? $spec['default'] : '';
     }
     return $defaults;
 }
