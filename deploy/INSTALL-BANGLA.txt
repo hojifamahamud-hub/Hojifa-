@@ -1,0 +1,59 @@
+==================================================
+ Avishek Sarkar সাইট ফাইল আপডেট প্যাকেজ (এক্সিস্টিং Laravel ইনস্টলের ওপর)
+==================================================
+
+এই প্যাকেজে vendor বা .env নেই — তোমার আগের ডাটাবেজ সেটিংস ও PHP প্যাকেজ
+ঠিক থাকবে। শুধু সাইটের সব ফাইল এক্সট্র্যাক্ট করলেই জায়গামতো বসে যাবে।
+
+--------------------------------------------------
+কোথায় এক্সট্র্যাক্ট করবেন?
+--------------------------------------------------
+সেই ফোল্ডারে, যেখানে index.php ফাইলটা আছে —
+আপনার ক্ষেত্রে: /home/USERNAME/home.mahmudsupport.xyz
+
+১. cPanel → File Manager → home.mahmudsupport.xyz ফোল্ডারে ঢুকুন
+২. Hojifa-site-files.zip আপলোড করুন
+৩. রাইট ক্লিক → Extract (Overwrite/Replace জিজ্ঞেস করলে "Yes/Replace All")
+
+EXট্র্যাক্ট হওয়ার পর এই ফোল্ডারগুলো আপডেট হয়ে বসবে:
+   app/  bootstrap/  config/  database/  lang/  resources/  routes/
+   build/ (নতুন CSS/JS)   index.php   .htaccess   favicon.ico   robots.txt
+
+--------------------------------------------------
+এরপর ৩ মিনিটের কাজ
+--------------------------------------------------
+১. ডাটাবেজ টেবিল নতুন করে আসবে:
+   phpMyAdmin → আপনার ডাটাবেজ → Import → install.sql → Go
+
+২. পারমিশন: storage ও bootstrap/cache ফোল্ডার 755 (Recurse সহ)
+
+৩. cPanel → Terminal:
+      cd ~/home.mahmudsupport.xyz
+      php artisan optimize:clear
+
+৪. ব্রাউজারে https://home.mahmudsupport.xyz রিফ্রেশ করুন
+   (ক্যাশ আটকে থাকলে Ctrl+Shift+R)
+
+--------------------------------------------------
+PHP ভার্সন চেক (গুরুত্বপূর্ণ)
+--------------------------------------------------
+cPanel → MultiPHP Manager → home.mahmudsupport.xyz → PHP 8.2 বা 8.3
+
+--------------------------------------------------
+আপনার .env যেমন আছে তেমনই থাকবে — শুধু একবার দেখে নিন
+--------------------------------------------------
+   DB_DATABASE, DB_USERNAME, DB_PASSWORD  → সঠিক ডাটাবেজ তথ্য
+   APP_DEBUG=false
+
+--------------------------------------------------
+পুরনো দুই-ফোল্ডার সেটআপ হলে (laravel_app + ডকুমেন্ট রুট)
+--------------------------------------------------
+- app, bootstrap, config, database, lang, resources, routes,
+  index.php, .htaccess → laravel_app/ ফোল্ডারে
+- build/ ফোল্ডারটা → ডকুমেন্ট রুট (site folder)-এ কপি করুন
+
+--------------------------------------------------
+অ্যাডমিন: https://home.mahmudsupport.xyz/admin/login
+  admin@mahmudsupport.xyz / Admin@12345
+  Home সেকশনের সব টেক্সট/সেটিংস Settings → Home প্যানেল থেকে বদলানো যায়।
+==================================================
