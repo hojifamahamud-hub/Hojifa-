@@ -1,101 +1,59 @@
 ==================================================
- Avishek Sarkar সাইট ইনস্টল গাইড (cPanel - সিঙ্গেল ফোল্ডার)
+ Avishek Sarkar সাইট ফাইল আপডেট প্যাকেজ (এক্সিস্টিং Laravel ইনস্টলের ওপর)
 ==================================================
 
-এই ZIP-এর সব ফাইল সরাসরি ডকুমেন্ট রুটে কাজ করবে।
-Document Root হবে: /home/USERNAME/home.mahmudsupport.xyz
+এই প্যাকেজে vendor বা .env নেই — তোমার আগের ডাটাবেজ সেটিংস ও PHP প্যাকেজ
+ঠিক থাকবে। শুধু সাইটের সব ফাইল এক্সট্র্যাক্ট করলেই জায়গামতো বসে যাবে।
 
 --------------------------------------------------
-ধাপ ১: ডাটাবেজ তৈরি করুন
+কোথায় এক্সট্র্যাক্ট করবেন?
 --------------------------------------------------
-1. cPanel → MySQL Databases
-2. নতুন ডাটাবেজ তৈরি করুন (যেমন: mahmudsu_hojifa)
-3. নতুন ইউজার তৈরি করুন ও ডাটাবেজে ALL PRIVILEGES দিন
-4. তিনটা জিনিস খাতায় লিখে রাখুন:
-   - ডাটাবেজের পুরো নাম (যেমন mahmudsu_hojifa)
-   - ইউজারনেম (যেমন mahmudsu_hojifa)
-   - পাসওয়ার্ড
+সেই ফোল্ডারে, যেখানে index.php ফাইলটা আছে —
+আপনার ক্ষেত্রে: /home/USERNAME/home.mahmudsupport.xyz
+
+১. cPanel → File Manager → home.mahmudsupport.xyz ফোল্ডারে ঢুকুন
+২. Hojifa-site-files.zip আপলোড করুন
+৩. রাইট ক্লিক → Extract (Overwrite/Replace জিজ্ঞেস করলে "Yes/Replace All")
+
+EXট্র্যাক্ট হওয়ার পর এই ফোল্ডারগুলো আপডেট হয়ে বসবে:
+   app/  bootstrap/  config/  database/  lang/  resources/  routes/
+   build/ (নতুন CSS/JS)   index.php   .htaccess   favicon.ico   robots.txt
 
 --------------------------------------------------
-ধাপ ২: ZIP আপলোড ও এক্সট্র্যাক্ট
+এরপর ৩ মিনিটের কাজ
 --------------------------------------------------
-1. cPanel → File Manager
-2. home.mahmudsupport.xyz ফোল্ডারে ঢুকুন
-3. Hojifa-cpanel-ready.zip আপলোড করুন
-4. ফাইলের ওপর রাইট ক্লিক → Extract
-   (ZIP-এর ভেতরের ফাইলগুলো — app, vendor, index.php, .env ইত্যাদি —
-    এই ফোল্ডারেই থাকবে, আলাদা সাবফোল্ডার বানাবেন না)
+১. ডাটাবেজ টেবিল নতুন করে আসবে:
+   phpMyAdmin → আপনার ডাটাবেজ → Import → install.sql → Go
+
+২. পারমিশন: storage ও bootstrap/cache ফোল্ডার 755 (Recurse সহ)
+
+৩. cPanel → Terminal:
+      cd ~/home.mahmudsupport.xyz
+      php artisan optimize:clear
+
+৪. ব্রাউজারে https://home.mahmudsupport.xyz রিফ্রেশ করুন
+   (ক্যাশ আটকে থাকলে Ctrl+Shift+R)
 
 --------------------------------------------------
-ধাপ ৩: .env ফাইলে ডাটাবেজ তথ্য বসান
+PHP ভার্সন চেক (গুরুত্বপূর্ণ)
 --------------------------------------------------
-File Manager → .env ফাইল → Edit — নিচের ৩টা লাইন দেখুন:
-
-DB_DATABASE=mahmudsu_hojifa
-DB_USERNAME=mahmudsu_hojifa
-DB_PASSWORD="your_db_password"
-
-ধাপ ১-এ তৈরি করা নাম ও পাসওয়ার্ড বসান।
-পাসওয়ার্ডে @ বা বিশেষ চিহ্ন থাকলে অবশ্যই কোটেশনের ভেতরে রাখুন।
+cPanel → MultiPHP Manager → home.mahmudsupport.xyz → PHP 8.2 বা 8.3
 
 --------------------------------------------------
-ধাপ ৪: ডাটাবেজ ইমপোর্ট
+আপনার .env যেমন আছে তেমনই থাকবে — শুধু একবার দেখে নিন
 --------------------------------------------------
-1. cPanel → phpMyAdmin
-2. বাম পাশ থেকে আপনার ডাটাবেজ সিলেক্ট করুন
-3. Import → install.sql (এই ZIP-এর সাথে আছে) → Go
+   DB_DATABASE, DB_USERNAME, DB_PASSWORD  → সঠিক ডাটাবেজ তথ্য
+   APP_DEBUG=false
 
 --------------------------------------------------
-ধাপ ৫: ফোল্ডার পারমিশন
+পুরনো দুই-ফোল্ডার সেটআপ হলে (laravel_app + ডকুমেন্ট রুট)
 --------------------------------------------------
-File Manager-এ storage ও bootstrap/cache ফোল্ডারে
-রাইট ক্লিক → Change Permissions → 755 (Recurse সহ)।
+- app, bootstrap, config, database, lang, resources, routes,
+  index.php, .htaccess → laravel_app/ ফোল্ডারে
+- build/ ফোল্ডারটা → ডকুমেন্ট রুট (site folder)-এ কপি করুন
 
 --------------------------------------------------
-ধাপ ৬: PHP ভার্সন 8.2+
---------------------------------------------------
-cPanel → MultiPHP Manager → home.mahmudsupport.xyz
-→ PHP 8.2 বা 8.3 সিলেক্ট করুন।
-
---------------------------------------------------
-ধাপ ৭: ক্যাশ ক্লিয়ার
---------------------------------------------------
-cPanel → Terminal:
-  cd ~/home.mahmudsupport.xyz
-  php artisan optimize:clear
-
---------------------------------------------------
-ধাপ ৮: সাইট দেখুন
---------------------------------------------------
-ব্রাউজারে: https://home.mahmudsupport.xyz
-
-অ্যাডমিন প্যানেল: https://home.mahmudsupport.xyz/admin/login
-  ইমেইল: admin@mahmudsupport.xyz
-  পাসওয়ার্ড: Admin@12345
-  (লগইন করে ড্যাশবোর্ড → Profile থেকে পাসওয়ার্ড বদলে নিন)
-
---------------------------------------------------
-সমস্যা হলে (500 error দেখালে)
---------------------------------------------------
-1. cPanel → MultiPHP Manager → PHP ভার্সন 8.2+ কিনা দেখুন
-2. .env-এ DB নাম/ইউজার/পাসওয়ার্ড হুবহু সঠিক কিনা দেখুন
-3. storage ও bootstrap/cache পারমিশন 755 কিনা দেখুন
-4. .env-এ সাময়িকভাবে APP_DEBUG=true করে পেজ রিফ্রেশ করলে
-   আসল এরর দেখা যাবে; কাজ শেষে আবার false করে দিন
-5. storage/logs/laravel.log ফাইলের শেষ লাইনে এররের বিস্তারিত থাকে
-
---------------------------------------------------
-অ্যাডমিন থেকে কী কী বদলানো যায়
---------------------------------------------------
-সবকিছু Settings → Home প্যানেল থেকে:
-- Hero নাম/বাংলা-ইংরেজি টেক্সট, পরিসংখ্যান, প্ল্যাটফর্ম তালিকা
-- About: ভূমিকা, মূল লেখা (প্রতি লাইন = এক প্যারাগ্রাফ), drives তালিকা
-- Skills, Services (ব্যানারসহ), Pricing, Calculator, Portfolio,
-  Case Studies, Testimonials, Video, Insights, FAQ, Meeting,
-  Newsletter, Contact — প্রতিটা সেকশনের শিরোনাম ও ইনট্রো
-- আলাদা মেনু: Pricing Packages, Calculator Items, Projects,
-  Case Studies, Skills, Services, Posts, FAQ — যোগ/বদল/ডিলিট
-- থিম: Settings থেকে Dark Mode অন/অফ নিয়ন্ত্রণ
-- মেনু/ফুটার লিংক, কন্টাক্ট ইমেইল/ফোন/ঠিকানা
-
+অ্যাডমিন: https://home.mahmudsupport.xyz/admin/login
+  admin@mahmudsupport.xyz / Admin@12345
+  Home সেকশনের সব টেক্সট/সেটিংস Settings → Home প্যানেল থেকে বদলানো যায়।
 ==================================================
